@@ -50,7 +50,7 @@ function run() {
             });
             const map = tags.data
                 .filter(s => !isNaN(parseInt(s.name)))
-                .sort((a, b) => parseInt(a.name) - parseInt(b.name));
+                .sort((a, b) => parseInt(b.name) - parseInt(a.name));
             const latest = map[0].commit.sha;
             const commits = yield git.rest.repos.compareCommits({
                 owner: github.context.repo.owner,
@@ -64,12 +64,18 @@ function run() {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 tag_name: name,
-                body: commits.data.commits.map(c => c.commit.message).join('\n')
+                body: commits.data.commits
+                    .filter(c => { var _a; return ((_a = c.commit.committer) === null || _a === void 0 ? void 0 : _a.email) === 'noreply@github.com'; })
+                    .map(c => `* ${c.sha} ${c.commit.message}`)
+                    .join('\n')
             });
         }
         catch (error) {
             if (error instanceof Error) {
                 core.setFailed(`Process failed with ${error.message}`);
+            }
+            else {
+                core.setFailed(`Process failed with ${error}`);
             }
         }
     });
