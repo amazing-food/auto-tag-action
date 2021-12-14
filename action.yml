@@ -1,0 +1,13 @@
+name: 'Auto tag action'
+description: 'This auto tags the repo once the action runs'
+author: 'Amazing web'
+inputs:
+  token:
+    required: true
+    description: 'The user token'
+  name:
+    required: true
+    description: 'The target name'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
