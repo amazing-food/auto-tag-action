@@ -9,5 +9,5 @@ inputs:
     required: true
     description: 'The target name'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
